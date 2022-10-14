@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 
 function Navbar() {
     let location = useLocation();
-    console.log(location);
   return (
     <Nav variant="tabs" defaultActiveKey={location.pathname}>
         <Nav.Item>
@@ -16,7 +15,7 @@ function Navbar() {
         <Nav.Item>
           <Nav.Link>
             <LinkContainer to={"/seperation"}>
-              <Nav.Link className="link-dark fw-bolder">Seperation</Nav.Link>
+              <Nav.Link className="link-dark fw-bolder">Separation</Nav.Link>
             </LinkContainer>
           </Nav.Link>
         </Nav.Item>
