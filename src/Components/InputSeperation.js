@@ -1,19 +1,53 @@
 import React from 'react'
 import { Form , Row , Col , Button } from "react-bootstrap";
 import { usePerson } from "../context/personProvider";
+import Graph from "../util/graph";
 
 function InputSeperation() {
   
   const { state, dispatch } = usePerson();
+
+  let graph = new Graph();
+
+  function addEdges() {
+    state.person.forEach(person => graph.addEdge(person.personname, person.friendname));
+  }
 
   const initialValue = (e) => {
     e.target.value = " ";
   };
 
   function handleFormSubmit(e) {
-    console.log(state)
-    dispatch({ type: "CLEAR_PERSON" });
     
+    addEdges();
+
+    if (!state.firstpersonname || !state.secondpersonname) {
+      dispatch({
+        type: "SET_FIND_PERSON",
+        value: "Please select a person and friend name",
+        key: "error",
+      });
+      return;
+    }
+
+    const result = graph.bidirectionalSearch(state.firstpersonname, state.secondpersonname);
+
+    if (!result) {
+      dispatch({
+        type: "SET_FIND_PERSON",
+        value: "Could not find a path",
+        key: "error",
+      });
+      return;
+    }
+
+    dispatch({
+      type: "SET_FIND_PERSON",
+      value: result,
+      key: "result",
+    });
+
+    dispatch({ type: "CLEAR_PERSON" });
   }
 
   return (
@@ -56,7 +90,7 @@ function InputSeperation() {
       <Button variant="primary" className='fw-bolder py-2 px-4' type="submit">
         Search
       </Button>
-    </Form>
+    </Form>  
     </div>
   )
 }
